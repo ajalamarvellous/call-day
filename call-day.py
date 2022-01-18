@@ -1,15 +1,18 @@
 import datetime
 import random
+import read_vcf
+import pyinputplus as pyinp
 
 class Person():
     def __init__(self, name, phone_no, date):
         """
         This holds all parameters we'll be using for the app
+        PARAMETERS:
         name: name of the friend
         phone_number: phone numbe rof the friend
         date: Date expected to call the friend
         """
-        self.__name = None
+        self.__name = name
         self.__phone_no = phone_no
         self.date = date
 
@@ -29,7 +32,33 @@ class CallDay:
         dates = list of all dates already assigned
         people = list of people on your contact list
         """
+        self.avail_time = None
         self.dates = list()
         self.people = list()
 
-    def read 
+def get_time():
+    """
+    THis function enables you to receive the time range which the user wants the calls to be assigned
+
+    OUTPUT
+    starting_hour: Time to start the call matching
+    Ending_hour: Time to end the call matching
+    """
+    print("PLease enter the hour range you'll love to make the calls in the day using the format 13:00 - 16:00")
+    try:
+        starting_hour = datetime.datetime.strptime(input("starting time: "), "%H:%M")
+        ending_hour = datetime.datetime.strptime(input("Ending time: "), "%H:%M")
+    except:
+        print("Sorry, there's an error in your input, please check it and try again")
+        starting_hour, ending_hour = get_time()
+    return starting_hour, ending_hour
+
+def assign_date():
+
+
+def main():
+    starting_hour, ending_hour = get_time()
+    print(starting_hour, ending_hour)
+
+if __name__ == "__main__":
+    main()
