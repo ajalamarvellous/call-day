@@ -53,12 +53,20 @@ def get_time():
         starting_hour, ending_hour = get_time()
     return starting_hour, ending_hour
 
-def assign_date():
+def assign_date(starting_hour, ending_hour):
+    day = random.randint(1,31)
+    month = random.randint(1,12)
+    year = datetime.datetime.now().year
+    hour = random.randint(starting_hour.hour, ending_hour.hour)
+    minute = random.randint(1,60)
+    date_assigned = datetime.datetime(year, month, day, hour, minute)
+    print(date_assigned)
 
 
 def main():
     starting_hour, ending_hour = get_time()
     print(starting_hour, ending_hour)
+    date_assigned = assign_date(starting_hour, ending_hour)
 
 if __name__ == "__main__":
     main()
