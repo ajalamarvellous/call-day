@@ -65,13 +65,18 @@ def assign_date(starting_hour, ending_hour):
     OUTPUT
     date_assigned : randomly assigned time generated
     """
-    day = random.randint(1,31)
-    month = random.randint(1,12)
-    year = datetime.datetime.now().year
-    hour = random.randint(starting_hour.hour, ending_hour.hour)
-    minute = random.randint(1,60)
-    date_assigned = datetime.datetime(year, month, day, hour, minute)
+    
+    try:
+        day = random.randint(1,31)
+        month = random.randint(1,12)
+        year = datetime.datetime.now().year
+        hour = random.randint(starting_hour.hour, ending_hour.hour)
+        minute = random.randint(1,60)
+        date_assigned = datetime.datetime(year, month, day, hour, minute)
+    except:
+        date_assigned = assign_date(starting_hour, ending_hour)
     print(date_assigned)
+    return date_assigned
 
 def verify_date(starting_hour, ending_hour, date_assigned, dates):
     """
