@@ -100,7 +100,11 @@ def verify_date(starting_hour, ending_hour, date_assigned, dates):
     not_in_list = False
     close_to_another = False
 
-    if date_assigned > starting_hour and date_assigned <= ending_hour:
+
+    if date_assigned > datetime.datetime(date_assigned.year, date_assigned.month, date_assigned.day,
+                                        starting_hour.hour, starting_hour.minute) or date_assigned \
+                    <= datetime.datetime(date_assigned.year, date_assigned.month, date_assigned.day,
+                                                        ending_hour.hour, ending_hour.minute) + datetime.timedelta(minutes = 30):
         within_time = True
 
     for date in dates:
