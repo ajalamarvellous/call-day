@@ -4,8 +4,10 @@ import read_vcf
 import pyinputplus as pyinp
 import logging
 
-logging.basicConfig("%(asctime)s %(funcName)s [%(levelname)s]: %(message)s", level = logging.DEBUG)
+logging.basicConfig(format = "%(asctime)s %(funcName)s [%(levelname)s]: %(message)s", level = logging.DEBUG)
+file_handler = logging.FileHandler("Call-day-log.log")
 logger = logging.getLogger()
+logger.addHandler(file_handler)
 
 class Person():
     def __init__(self, name, phone_no, date):
@@ -19,7 +21,7 @@ class Person():
         self.__name = name
         self.__phone_no = phone_no
         self.date = date
-        logger.info("new person %(self.__name)s has been created and allocated time is %(self.date)s")
+        logger.info(f"new person {self.__name} has been created and allocated time is {self.date}")
 
     def change_number(self, number ):
         # function to change the phone_number of the person
@@ -88,7 +90,7 @@ def assign_date(starting_hour, ending_hour):
         hour = random.randint(starting_hour.hour, ending_hour.hour)
         minute = random.randint(1,60)
         date_assigned = datetime.datetime(year, month, day, hour, minute)
-        logger.info("a new random date %(date_assigned)s has been assigned")
+        logger.info(f"a new random date {date_assigned} has been assigned")
     except:
         logger.info("Oops!!! seems the date date does not exist on the calender")
         date_assigned = assign_date(starting_hour, ending_hour)
@@ -115,30 +117,38 @@ def verify_date(starting_hour, ending_hour, date_assigned, dates):
     """
     within_time = False
     not_in_list = False
-    close_to_another = False
+    not_close_to_another = False
 
 
     if date_assigned > datetime.datetime(date_assigned.year, date_assigned.month, date_assigned.day,
-                                        starting_hour.hour, starting_hour.minute) or date_assigned \
-                    <= datetime.datetime(date_assigned.year, date_assigned.month, date_assigned.day,
-                                        ending_hour.hour, ending_hour.minute) + datetime.timedelta(minutes = 30):
+                                        starting_hour.hour, starting_hour.minute) and date_assigned \
+        + datetime.timedelta(minutes = 30) <= datetime.datetime(date_assigned.year, date_assigned.month, date_assigned.day,
+                                        ending_hour.hour, ending_hour.minute):
+        logger.info("date verified to be within timeframe")
         within_time = True
+    else:
+        logger.info("date not verified, not within timeframe")
 
+#SO I THINK THERE IS A PROBLEM HERE, BEEN TRYING TO RACK MY HEAD ROUND IT BUT BUT NOT YET
     for date in dates:
-        if date_assigned >= date - datetime.timedelta(minutes =30) or date_assigned <= date + datetime.timedelta(minutes = 30):
-            close_to_another = True
+        if (date_assigned - date <= datetime.timedelta(minutes =30)) or (date - date_assigned <= datetime.timedelta(minutes = 30):
+            logger.info("date verified, not close to another")
+            not_close_to_another = True
+        else:
+            logger.info("date not verified, close to another")
 
     if date_assigned not in dates:
+        logger.info("date verified not to be in list previously")
         not_in_list = True
+    else:
+        logger.info("date not verified, exist in list already")
 
-    if within_time and not_in_list and not close_to_another:
-        logger.info("date has been verified to be within allocated time frame, not previously allocated and not close to another date")
+    if within_time and not_in_list and not_close_to_another:
+        logger.info("date has been verified, TRUE!!")
         return True
     else:
         logger.info("date not verified to pass")
         return False
-
-
 
 def main():
     name_and_number = read_vcf.read_contact()
@@ -153,6 +163,15 @@ def main():
             new_person = Person(name,number, date_assigned)
             call_day.add_person(name, new_person)
             call_day.add_date(date_assigned)
-
+        else:
+            date_assigned = assign_date(starting_hour, ending_hour)
+            if verify_date(starting_hour, ending_hour, date_assigned, call_day.dates ):
+                name = name_and_number[number][0]
+                number = name_and_number[number][1],
+                new_person = Person(name,number, date_assigned)
+                call_day.add_person(name, new_person)
+                call_day.add_date(date_assigned)
+    content_len = len(call_day.people)
+    logger.info(f"{content_len} people added to the database")
 if __name__ == "__main__":
     main()
