@@ -2,6 +2,10 @@ import datetime
 import random
 import read_vcf
 import pyinputplus as pyinp
+import logging
+
+logging.basicConfig("%(asctime)s %(funcName)s [%(levelname)s]: %(message)s", level = logging.DEBUG)
+logger = logging.getLogger()
 
 class Person():
     def __init__(self, name, phone_no, date):
@@ -15,6 +19,7 @@ class Person():
         self.__name = name
         self.__phone_no = phone_no
         self.date = date
+        logger.info("new person %(self.__name)s has been created and allocated time is %(self.date)s")
 
     def change_number(self, number ):
         # function to change the phone_number of the person
@@ -35,11 +40,13 @@ class CallDay:
         self.dates = list()
         self.people = dict()
 
-    def add_person(self, new_person):
-        self.people[new_person.name] = new_person
+    def add_person(self,name, new_person):
+        self.people[name] = new_person
+        logger.info("person added to Callday successfully")
 
     def add_date(self, date):
         self.dates.append(date)
+        logger.info("date has been registered successfully")
 
 def get_time():
     """
@@ -54,8 +61,10 @@ def get_time():
         starting_hour = datetime.datetime.strptime(input("starting time: "), "%H:%M")
         ending_hour = datetime.datetime.strptime(input("Ending time: "), "%H:%M")
     except:
+        logger.error("an error encountered but managed accordingly")
         print("Sorry, there's an error in your input, please check it and try again")
         starting_hour, ending_hour = get_time()
+    logger.info("suitable date obtained successfully")
     return starting_hour, ending_hour
 
 def assign_date(starting_hour, ending_hour):
@@ -79,9 +88,11 @@ def assign_date(starting_hour, ending_hour):
         hour = random.randint(starting_hour.hour, ending_hour.hour)
         minute = random.randint(1,60)
         date_assigned = datetime.datetime(year, month, day, hour, minute)
+        logger.info("a new random date %(date_assigned)s has been assigned")
     except:
+        logger.info("Oops!!! seems the date date does not exist on the calender")
         date_assigned = assign_date(starting_hour, ending_hour)
-    print(date_assigned)
+
     return date_assigned
 
 def verify_date(starting_hour, ending_hour, date_assigned, dates):
@@ -121,22 +132,26 @@ def verify_date(starting_hour, ending_hour, date_assigned, dates):
         not_in_list = True
 
     if within_time and not_in_list and not close_to_another:
+        logger.info("date has been verified to be within allocated time frame, not previously allocated and not close to another date")
         return True
     else:
+        logger.info("date not verified to pass")
         return False
 
 
 
 def main():
-    name_and_number = read_vcf()
+    name_and_number = read_vcf.read_contact()
     starting_hour, ending_hour = get_time()
     date_list = list()
     call_day = CallDay()
     for number in range(len(name_and_number)):
         date_assigned = assign_date(starting_hour, ending_hour)
         if verify_date(starting_hour, ending_hour, date_assigned, call_day.dates ):
-            new_person = Person(name_and_number[number][0], name_and_number[number][1], date_assigned)
-            call_day.add_person(new_person)
+            name = name_and_number[number][0]
+            number = name_and_number[number][1],
+            new_person = Person(name,number, date_assigned)
+            call_day.add_person(name, new_person)
             call_day.add_date(date_assigned)
 
 if __name__ == "__main__":
