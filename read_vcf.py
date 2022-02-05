@@ -56,7 +56,7 @@ def get_name_number(list_given):
     return name_number_pair
 
 
-def main():
+def read_contact():
     #main application to run the application
     f = open("contacts.vcf", "r")
     file_content = f.read()
@@ -67,5 +67,5 @@ def main():
     return name_number_list
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
