@@ -1,1 +1,4 @@
 contacts.vcf
+.pytest_cache
+Call-day-log.log
+__pycache__
