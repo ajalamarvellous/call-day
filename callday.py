@@ -80,7 +80,7 @@ def assign_date(starting_hour, ending_hour):
 
 def verify_date(starting_hour, ending_hour, date_assigned, dates):
     """
-    This function verifes the random date verified for 3 times:
+    This function verifies the random date verified for 3 things:
     within_time: To verify that the time frame is with the timeframe the user specified
     not_in list : To verify the date has not been assigned before
     not_close_to_another : To verify that it is not within 30 minutes range of any other time allocated
@@ -104,7 +104,7 @@ def verify_date(starting_hour, ending_hour, date_assigned, dates):
     if date_assigned > datetime.datetime(date_assigned.year, date_assigned.month, date_assigned.day,
                                         starting_hour.hour, starting_hour.minute) or date_assigned \
                     <= datetime.datetime(date_assigned.year, date_assigned.month, date_assigned.day,
-                                                        ending_hour.hour, ending_hour.minute) + datetime.timedelta(minutes = 30):
+                                        ending_hour.hour, ending_hour.minute) + datetime.timedelta(minutes = 30):
         within_time = True
 
     for date in dates:
@@ -121,10 +121,19 @@ def verify_date(starting_hour, ending_hour, date_assigned, dates):
 
 
 
-#def main():
-#    starting_hour, ending_hour = get_time()
-#    print(starting_hour, ending_hour)
-#    date_assigned = assign_date(starting_hour, ending_hour)
+def main():
+    name_and_number = read_vcf()
+    starting_hour, ending_hour = get_time()
+    date_list = list()
+    call_day = CallDay()
+    for number in range(len(name_and_number)):
+        date_assigned = assign_date(starting_hour, ending_hour)
+        if verify_date(starting_hour, ending_hour, date_assigned, date_list):
+            date_list.append(date_assigned)
+            new_person = Person(name_and_number[number][0], name_and_number[number][1], date_assigneds)
+            call_day.add_person(new_person)
+
+    call_day.add_dates(date_list)
 
 #if __name__ == "__main__":
 #    main()
