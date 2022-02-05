@@ -35,6 +35,12 @@ class CallDay:
         self.dates = list()
         self.people = dict()
 
+    def add_person(self, new_person):
+        self.people[new_person.name] = new_person
+
+    def add_date(self, date):
+        self.dates.append(date)
+
 def get_time():
     """
     THis function enables you to receive the time range which the user wants the calls to be assigned
@@ -128,12 +134,10 @@ def main():
     call_day = CallDay()
     for number in range(len(name_and_number)):
         date_assigned = assign_date(starting_hour, ending_hour)
-        if verify_date(starting_hour, ending_hour, date_assigned, date_list):
-            date_list.append(date_assigned)
-            new_person = Person(name_and_number[number][0], name_and_number[number][1], date_assigneds)
+        if verify_date(starting_hour, ending_hour, date_assigned, call_day.dates ):
+            new_person = Person(name_and_number[number][0], name_and_number[number][1], date_assigned)
             call_day.add_person(new_person)
+            call_day.add_date(date_assigned)
 
-    call_day.add_dates(date_list)
-
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+    main()
