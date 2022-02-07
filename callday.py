@@ -130,12 +130,15 @@ def verify_date(starting_hour, ending_hour, date_assigned, dates):
         logger.info("date not verified, not within timeframe")
 
 #SO I THINK THERE IS A PROBLEM HERE, BEEN TRYING TO RACK MY HEAD ROUND IT BUT BUT NOT YET
-    for date in dates:
-        if (date_assigned - date <= datetime.timedelta(minutes =30)) or (date - date_assigned <= datetime.timedelta(minutes = 30):
-            logger.info("date verified, not close to another")
-            not_close_to_another = True
-        else:
-            logger.info("date not verified, close to another")
+    if len(dates) < 1:
+        not_close_to_another = True
+    else:
+        for date in dates:
+            if (date_assigned - date <= datetime.timedelta(minutes =30)) or (date - date_assigned <= datetime.timedelta(minutes = 30)):
+                #logger.info("date verified, not close to another")
+                not_close_to_another = True
+            else:
+                logger.info("date not verified, close to another")
 
     if date_assigned not in dates:
         logger.info("date verified not to be in list previously")
@@ -173,5 +176,6 @@ def main():
                 call_day.add_date(date_assigned)
     content_len = len(call_day.people)
     logger.info(f"{content_len} people added to the database")
+    logger.info("______________________________________________________________")
 if __name__ == "__main__":
     main()
