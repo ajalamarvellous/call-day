@@ -3,6 +3,7 @@ import random
 import read_vcf
 import pyinputplus as pyinp
 import logging
+import pickle
 
 logging.basicConfig(format = "%(asctime)s %(funcName)s [%(levelname)s]: %(message)s", level = logging.DEBUG)
 file_handler = logging.FileHandler("Call-day-log.log")
@@ -176,6 +177,10 @@ def main():
                 call_day.add_date(date_assigned)
     content_len = len(call_day.people)
     logger.info(f"{content_len} people added to the database")
+
+    with open("contact.dat", "wb") as contact_file:
+        pickle.dump(call_day, contact_file)
+        logger.info("data serialised to memory")
     logger.info("______________________________________________________________")
 if __name__ == "__main__":
     main()
